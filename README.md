@@ -84,19 +84,17 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
+<!--
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started:
+-->
+This project is built entirely on Python, it combines other Interactive Brokers libraries written by other contributors as well as my own contribution in making algorithmic trading on Interactive Brokers possible.
+<!--
 **To avoid retyping too much info. Do a search and replace with your text editor for the following:**
 `github_username`, `repo_name`, `twitter_handle`, `email`, `project_title`, `project_description`
-
+-->
 
 ### Built With
-
-* []()
-* []()
-* []()
+* [Python](https://www.python.org/)
 
 
 
@@ -107,29 +105,38 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+Before using this library, ensure you have Java installed and have an account with Interactive Brokers. Check out [Interactive Broker Client Portal Web API](https://interactivebrokers.github.io/cpwebapi/) for setting up. You can skip the download and unzip the CPI WebAPI step from the IB site as this step has been taken care off in the library.
+
 
 ### Installation
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot.git
    ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
+2. Navigate to the working directory and run setup.py
+
+3. Enter your IB credentials in write_config.py and run the script
+
+4. Open run_client.py and run the script. It will download the clientportal.gw to the working directory.
+
+5. In file explorer, navigate to the    clientportal.gw foler and run
+    ```
+   "bin/run.bat" "root/conf.yaml"
+    ```
+    using Git Bash.
+
+6. Run run_client.py in tests and the bot should be up and running.
+
+7. Follow the instructions on run_client.py to configure your trading bot.
+
 
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+To use it, study the revelant libraries, namely the python objects in robot/ folder. There are also some simple instructions in the run_client.py to get you up and running quick.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
@@ -165,18 +172,16 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email
+Vincent Ho - [LinkedIn](https://www.linkedin.com/in/vincent-ho-b0932b138/)
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot](https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot)
 
 
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
+* [Areed1192](https://github.com/areed1192)
 
 
 
@@ -184,15 +189,16 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/Vincentho711/Interactive-Brokers-Trading-Bot?style=for-the-badge
+[contributors-url]: https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Vincentho711/Interactive-Brokers-Trading-Bot?style=for-the-badge
+[forks-url]: https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot/network/members
+[stars-shield]: https://img.shields.io/github/stars/Vincentho711/Interactive-Brokers-Trading-Bot?style=for-the-badge
+[stars-url]: https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Vincentho711/Interactive-Brokers-Trading-Bot?style=for-the-badge
+[issues-url]: https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot/issues
+[license-shield]: https://img.shields.io/github/license/Vincentho711/Interactive-Brokers-Trading-Bot?style=for-the-badge
 [license-url]: https://github.com/github_username/repo/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/github_username
+[linkedin-url]: https://www.linkedin.com/in/vincent-ho-b0932b138/
+[forthebadge made-with-python]: http://ForTheBadge.com/images/badges/made-with-python.svg
