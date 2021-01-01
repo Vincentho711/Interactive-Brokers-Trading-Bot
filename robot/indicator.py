@@ -171,7 +171,7 @@ class Indicators():
         locals_data = locals()
         del locals_data['self']
 
-        column_name = column_name + '_' + str(period)
+        # column_name = column_name + '_' + str(period)
         self._current_indicators[column_name] = {}
         self._current_indicators[column_name]['args'] = locals_data
         self._current_indicators[column_name]['func'] = self.rsi
@@ -223,7 +223,7 @@ class Indicators():
         locals_data = locals()
         del locals_data['self']
 
-        column_name = column_name + '_' + str(period)
+        #column_name = column_name + '_' + str(period)
         self._current_indicators[column_name] = {}
         self._current_indicators[column_name]['args'] = locals_data
         self._current_indicators[column_name]['func'] = self.sma
@@ -248,7 +248,7 @@ class Indicators():
         locals_data = locals()
         del locals_data['self']
 
-        column_name = column_name + '_' + period
+        #column_name = column_name + '_' + period
         self._current_indicators[column_name] = {}
         self._current_indicators[column_name]['args'] = locals_data
         self._current_indicators[column_name]['func'] = self.ema
