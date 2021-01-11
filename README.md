@@ -56,7 +56,7 @@
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <summary><h2 style="display: inline-block"> 📚Table of Contents</h2></summary>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -83,7 +83,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## 💡About The Project
 <!--
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 -->
@@ -99,16 +99,16 @@ This project is built entirely on Python, it combines other Interactive Brokers 
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+## 🎉Getting Started
 
 To get a local copy up and running follow these simple steps.
 
-### Prerequisites
+### 🔖 Prerequisites
 
 Before using this library, ensure you have Java installed and have an account with Interactive Brokers. Check out [Interactive Broker Client Portal Web API](https://interactivebrokers.github.io/cpwebapi/) for setting up. You can skip the download and unzip the CPI WebAPI step from the IB site as this step has been taken care off in the library.
 
 
-### Installation
+### 🔧 Installation
 
 1. Clone the repo
    ```sh
@@ -134,7 +134,7 @@ Before using this library, ensure you have Java installed and have an account wi
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## 📦 Usage
 
 To use it, study the revelant libraries, namely the python objects in robot/ folder. There are also some simple instructions in the run_client.py to get you up and running quick.
 
@@ -143,14 +143,25 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 
 <!-- ROADMAP -->
-## Roadmap
+## 🚩 Roadmap
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a list of proposed features (and known issues).
 
+### ✨ Milestone Summary
+
+| Status | Milestone | Goals | ETA |
+| :---: | :--- | :---: | :---: |
+| 🚀 | **[Implement the ability to associate tickers with different indicators and trigger levels](#implement-ticker-indicators-association)** | 0 / 1 | 28 Jan 2021 |
+
+### Implement ticker indicators association
+
+> This milestone will be done when 
+* Different signals can be attached to a ticker
+* All the indicators' signal can be checked independently, giving correct buy/sell signals 
 
 
 <!-- CONTRIBUTING -->
-## Contributing
+## 💝 Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -163,14 +174,14 @@ Contributions are what make the open source community such an amazing place to b
 
 
 <!-- LICENSE -->
-## License
+## 📜 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
 <!-- CONTACT -->
-## Contact
+## 😃 Contact
 
 Vincent Ho - [LinkedIn](https://www.linkedin.com/in/vincent-ho-b0932b138/)
 
@@ -179,7 +190,7 @@ Project Link: [https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot](
 
 
 <!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
+## ⭐ Acknowledgements
 
 * [Areed1192](https://github.com/areed1192)
 
