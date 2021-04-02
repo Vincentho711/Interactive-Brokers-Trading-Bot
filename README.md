@@ -151,7 +151,7 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 
 | Status | Milestone | Goals | ETA |
 | :---: | :--- | :---: | :---: |
-| 🚀 | **[Implement the ability to associate tickers with different indicators and trigger levels](#implement-ticker-indicators-association)** | 0 / 1 | 28 Jan 2021 |
+| 🚀 | **[Implement the ability to associate tickers with different indicators and trigger levels](#implement-ticker-indicators-association)** | 0 / 1 | 15 April 2021 |
 
 ### Implement ticker indicators association
 
