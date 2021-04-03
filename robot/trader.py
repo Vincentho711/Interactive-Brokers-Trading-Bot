@@ -205,7 +205,10 @@ class Trader():
 
         current_quotes_dict = dict()
         for item in current_quotes:
-            current_quotes_dict.update({item['55']:item['31']})
+            if '31' in item.keys():     # Check if the last price exists for a symbol
+                current_quotes_dict.update({item['55']:item['31']})
+            else:
+                current_quotes_dict.update({item['55']:None})
 
         return current_quotes_dict
         
@@ -413,6 +416,12 @@ class Trader():
             page_id=0
         )
         for position in account_positions:
+
+            # Sometimes there isn't the key 'ticker' in the position dictionary, in which case \
+            # use 'contractDesc' instead
+            if 'ticker' not in position:
+                position['ticker'] = position['contractDesc']
+            
             self.portfolio.add_position(
                 symbol=position['ticker'],
                 asset_type=position['assetClass'],
