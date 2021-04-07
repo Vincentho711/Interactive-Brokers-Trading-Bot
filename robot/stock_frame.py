@@ -254,3 +254,50 @@ class StockFrame():
                     #Add it as a buy signal
                     conditions['sell'] = condition_2
         return conditions
+
+    # Check whether the conditions for the indicators associated with ticker has been met. If it's met, it will \
+    # return the last row for each symbol in the StockFrame and compare the indicator column values with the conditions specidied. 
+    def _check_ticker_signals(self, ticker_indicators:Dict, ticker_indicators_key:List[tuple]) -> Union[pd.DataFrame,None]:
+        
+        #Define a dictionary of conditions 
+        conditions = {}
+
+        # First, form a list with all the indicator names from the 2nd element in ticker_indicators_key:List
+        # Check to see if all the indicator columns exist
+        if self.do_indicator_exist(column_names=[pair[1] for pair in ticker_indicators_key]):
+
+            #Loop through every tuple in ticker_indicators_key which is a list
+            for ticker_indicator in ticker_indicators_key:
+                # The first element of tuple is the ticker and the second element of tuple contains the name of indicator 
+                ticker = ticker_indicator[0]
+                indicator = ticker_indicator[1]
+                
+                # Get the last row of the specified ticker group
+                last_row = self._symbol_groups.get_group(ticker).tail(1)
+
+                # Select the indicator cell as target for comparison later
+                target_cell = last_row[indicator]
+
+                #Grab the buy and sell condition of an ticker_indicator from the function arguments, e.g. self._ticker_indicator_signals:Dict in Indicator class
+                buy_condition_target = ticker_indicators[ticker][indicator]['buy']
+                sell_condition_target = ticker_indicators[ticker][indicator]['sell']
+
+                buy_condition_operator = ticker_indicators[ticker][indicator]['buy_operator']
+                sell_condition_operator = ticker_indicators[ticker][indicator]['sell_operator']
+
+                if buy_condition_operator(target_cell, buy_condition_target):
+                    # If the buy condition has been met, append key-value pair to conditions['buys']
+                    # The key would be the ticker and the value would be the buy_cash_quantity which can be used to calculate quantity in process_signal()
+                    conditions['buys'].update({ticker:ticker_indicators[ticker][indicator]['buy_cash_quantity']})
+
+                if sell_condition_operator(target_cell, sell_condition_target):
+                    # If the sell condition has been met, append key-value pair to conditions['sells']
+                    # The key would be the ticker and the value would be close_position_when_sold:bool, this will be passed onto process_signal()
+                    conditions['sells'].update({ticker:ticker_indicators[ticker][indicator]['close_position_when_sell']})
+        
+        return conditions
+
+
+
+
+

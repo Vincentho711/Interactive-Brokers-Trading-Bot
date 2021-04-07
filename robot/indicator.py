@@ -24,6 +24,11 @@ class Indicators():
         self._indicators_comp_key = []
         self._indicators_key = []
 
+        # For ticker_indicators
+        self._ticker_indicator_signals = {}
+
+        self._ticker_indicators_key = []
+
     def set_indicator_signal(self, indicator:str, buy: float, sell: float, condition_buy: Any, condition_sell: Any, buy_max: float = None, sell_max: float = None
     , condition_buy_max: Any = None, condition_sell_max: Any = None):
         #Each indicator has a buy signal and a sell signal, numeric threshold and operator (e.g. <,>)
@@ -66,6 +71,35 @@ class Indicators():
         self._indicator_signals[indicator]['sell_max'] = sell_max
         self._indicator_signals[indicator]['buy_operator_max'] = condition_buy_max
         self._indicator_signals[indicator]['sell_operator_max'] = condition_sell_max
+
+    # An improved version of set_indicator_signal() as this allows indicator or strategy to be ticker-specific
+    def set_ticker_indicator_signal(self, ticker:str, indicator:str, buy_cash_quantity:float, close_position_when_sell:bool=True, buy:float, \
+        sell:float, condition_buy: Any, condition_sell: Any, buy_max: float = None, sell_max: float = None, \
+        condition_buy_max: Any = None, condition_sell_max: Any = None):
+
+        # Check if ticker exists in the self._ticker_indicator_signals
+        if ticker not in self._ticker_indicator_signals:
+            self._ticker_indicator_signals[ticker] = {}
+
+            # Check if indicator already exists in the dictionary
+            if indicator not in self._ticker_indicator_signals[ticker]:
+                self._ticker_indicator_signals[ticker][indicator] = {}
+                self._ticker_indicators_key.append((ticker,indicator))
+        
+        # Add the signals
+        self._ticker_indicator_signals[ticker][indicator]['buy_cash_quantity'] = buy_cash_quantity
+        self._ticker_indicator_signals[ticker][indicator]['close_position_when_sell'] = close_position_when_sell
+        self._ticker_indicator_signals[ticker][indicator]['buy'] = buy     
+        self._ticker_indicator_signals[ticker][indicator]['sell'] = sell
+        self._ticker_indicator_signals[ticker][indicator]['buy_operator'] = condition_buy
+        self._ticker_indicator_signals[ticker][indicator]['sell_operator'] = condition_sell
+
+        # Add the max signals
+        self._indicator_signals[indicator]['buy_max'] = buy_max  
+        self._indicator_signals[indicator]['sell_max'] = sell_max
+        self._indicator_signals[indicator]['buy_operator_max'] = condition_buy_max
+        self._indicator_signals[indicator]['sell_operator_max'] = condition_sell_max
+
 
     #Another method for creating a signal would be when one indicator crosses above or below another indicator, so we need to compare the 2 here
     def set_indicator_signal_compare(self,indicator_1:str, indicator_2:str, condition_buy: Any, condition_sell: Any) -> None:
