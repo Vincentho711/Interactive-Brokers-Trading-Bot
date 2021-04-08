@@ -704,6 +704,127 @@ class Trader():
                         order_responses.append(order_response)
         
         return order_responses
+    
+    # A function similar to process_signal() used to process ticker specific signals
+    def process_ticker_signal(self,ticker_signals:Dict,exchange:List,order_type:str='MKT') -> List[dict]:
+        
+        # Extract buys and sells signal from signals
+        buys:dict = ticker_signals['buys']
+        sells:dict = ticker_signals['sells']
+
+        # Establish order_response list
+        order_responses = []
+
+        # Check if there are any buys signals
+        if buys:
+            # Loop through each key value pair in dict
+            for ticker,buy_cash_quantity in buys.items():
+                # Obtain the conid for the symbol
+                conid = self.symbol_to_conid(symbol=ticker,exchange=exchange)
+
+                # Check if position already exists in Portfolio object, only proceed buy signal if it is not in portfolio
+                if self.portfolio.in_portfolio(ticker) is False:
+                    
+                    quantity = self.calculate_buy_quantity(ticker=ticker,conid=conid,buy_cash_quantity=buy_cash_quantity)
+                    
+                    # Check if a quantity has been calculated
+                    if quantity not None:
+                        # Create a Trade object for symbol that doesn't exist in Portfolio.positions
+                        # Purchase with the quantity calculated
+                        trade_obj: Trade = self.create_trade(
+                            account_id=self.account,
+                            local_trade_id=None,
+                            conid=conid,
+                            ticker=ticker,
+                            security_type='STK',
+                            order_type=order_type,
+                            side='BUY',
+                            duration='DAY',
+                            price=None,
+                            quantity=quantity
+                        )
+
+                        # Preview the order
+                        preview_order_response = trade_obj.preview_order()
+
+                        # Execute the order
+                        execute_order_response = trade_obj.place_order(ignore_warning=True)
+
+                        # Save the exexcute_order_response into a dictionary
+                        order_response = {
+                            'symbol': symbol,
+                            'local_trade_id':execute_order_response[0]['local_order_id'],
+                            'trade_id':execute_order_response[0]['order_id'],
+                            'message':execute_order_response[0]['text'],
+                            'order_status':execute_order_response[0]['order_status'],
+                            'warning_message':execute_order_response[0]['warning_message']
+                        }
+
+                        # Sleep for 0.1 seconds to make sure order is executed on IB server
+                        time_true.sleep(0.1)
+
+                        # Query order to find out market order, price and other info
+                        order_status_response = self.session.get_order_status(trade_id=execute_order_response[0]['order_id'])
+                        order_price = float(order_status_response['exit_strategy_display_price'])
+                        order_quantity = float(order_status_response['size'])
+                        order_status = order_status_response['order_status']
+                        order_asset_type = order_status_response['sec_type']
+                        
+                        # Obtain the time now
+                        time_now = datetime.now(tz=timezone.utc).replace(microsecond=0).isoformat()
+                        
+                        # Add this position onto our Portfolio Object with the data obtained from order_status_response
+                        portfolio_position_dict = self.portfolio.add_position(
+                            symbol=symbol,
+                            asset_type=order_asset_type,
+                            purchase_date=time_now,
+                            purchase_price=order_price,
+                            quantity=order_quantity,
+                            order_status=order_status
+                            # Ownership_status is automatically set to when purchase_date is supplied
+                        )
+
+                        # IMPLEMENT WAIT UNTIL ORDER IS FILLED? #
+
+
+                        # Append the order_response above to the main order_responses list
+                        order_responses.append(order_response)
+                    else:
+                        pprint(f"Current quote for {ticker} is {quantity} which means it cannot be obtained,\
+                             no order has been placed as a result.")
+        # Check if we have any sells signals
+        elif sells:
+
+            # Implement this next
+            pass
+
+
+    def calculate_buy_quantity(self,ticker:str,conid:str,buy_cash_quantity:float) -> Union[float,None]:
+        """Calculate the quantity of stock to buy based on the latest quote and the total buy cash.
+
+        Args:
+            ticker (str): Ticker
+            conid (str): The conid for the ticker
+            buy_cash_quantity (float): Total cash allocation for this purchase
+
+        Returns:
+            Union[float,None]: Depending on whether current quote can be obtained, it returns the quantity \
+                or None
+        """
+        # First query the latest quote
+        quotes_dict = self.get_current_quotes(conids=[conid])
+        
+        # Check if the dict contains latest quote data 
+        if quotes_dict.get(ticker):
+            # Convert the price to a float
+            current_price = float(quotes_dict.get(ticker))
+            # Calculate quantity
+            quantity = buy_cash_quantity/current_price
+            # Round it to 2 d.p
+            return round(quantity,2)
+        else:
+            return None
+
 
     def update_order_status(self) -> Dict:
         """Query and update all the live orders on IB.
