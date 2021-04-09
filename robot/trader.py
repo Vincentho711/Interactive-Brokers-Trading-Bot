@@ -775,7 +775,7 @@ class Trader():
                         
                         # Add this position onto our Portfolio Object with the data obtained from order_status_response
                         portfolio_position_dict = self.portfolio.add_position(
-                            symbol=symbol,
+                            symbol=ticker,
                             asset_type=order_asset_type,
                             purchase_date=time_now,
                             purchase_price=order_price,
@@ -792,11 +792,69 @@ class Trader():
                     else:
                         pprint(f"Current quote for {ticker} is {quantity} which means it cannot be obtained,\
                              no order has been placed as a result.")
+
         # Check if we have any sells signals
         elif sells:
+            # Loop through each key value pair in dict
+            for ticker,close_position_when_sell in sells.items():
+                # Obtain the conid for the symbol
+                conid = self.symbol_to_conid(symbol=ticker,exchange=exchange)
 
-            # Implement this next
-            pass
+                # Check if position already exists in Portfolio object, only proceed sell signal if it is in portfolio
+                if self.portfolio.in_portfolio(ticker):
+                    
+                    #Check if we own the position in portfolio
+                    if self.portfolio.positions[ticker]['ownership_status']:
+                        # Set ownership_status to False as we are selling it
+                        self.portfolio.set_ownership_status(symbol=ticker,ownership=False)
+
+                        # Check if we want to close the position when selling 
+                        # Logic needs to be implemented when close_position_when_sell == False
+                        if close_position_when_sell:
+                            quantity = self.portfolio.positions[ticker]['quantity']
+                        else:
+                            # Not yet implemented, simply sell position even when it results to False for now
+                            quantity = self.portfolio.positions[ticker]['quantity']
+                        
+                        # Create a trade_obj to sell it
+                        trade_obj: Trade = self.create_trade(
+                            account_id=self.account,
+                            local_trade_id=None,
+                            conid=conid,
+                            ticker=ticker,
+                            security_type='STK',
+                            order_type=order_type,
+                            side='SELL',
+                            duration='DAY',
+                            price=None,     # price can be None when selling with market order
+                            quantity=quantity
+                        )
+
+                        # Preview the order
+                        preview_order_response = trade_obj.preview_order()
+
+                        # Execute the order
+                        execute_order_response = trade_obj.place_order(ignore_warning=True)
+
+                        # Save the exexcute_order_response into a dictionary
+                        order_response = {
+                            'symbol': ticker,
+                            'local_trade_id':execute_order_response[0]['local_order_id'],
+                            'trade_id':execute_order_response[0]['order_id'],
+                            'order_status':execute_order_response[0]['order_status'],
+                        }
+
+
+                        # Sleep for 0.1 seconds to make sure order is executed on IB server
+                        time_true.sleep(0.1)
+
+                        # Set positions[symbol]['quantity] to 0 and update order_status
+                        self.portfolio.positions[symbol]['quantity'] = 0
+                        self.portfolio.positions[symbol]['order_status'] = execute_order_response[0]['order_status']
+
+                        order_responses.append(order_response)
+
+        return order_responses
 
 
     def calculate_buy_quantity(self,ticker:str,conid:str,buy_cash_quantity:float) -> Union[float,None]:
