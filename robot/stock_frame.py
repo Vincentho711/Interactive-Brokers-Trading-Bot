@@ -257,7 +257,24 @@ class StockFrame():
 
     # Check whether the conditions for the indicators associated with ticker has been met. If it's met, it will \
     # return the last row for each symbol in the StockFrame and compare the indicator column values with the conditions specidied. 
-    def _check_ticker_signals(self, ticker_indicators:Dict, ticker_indicators_key:List[tuple]) -> Union[pd.DataFrame,None]:
+    def _check_ticker_signals(self, ticker_indicators:Dict, ticker_indicators_key:List[tuple]) -> Dict:
+        """Returns a dict containing buy & sell information if conditions are met by the ticker indicators.
+        Overview:
+        ----
+        Before a trade is executed, we must check to make sure if the
+        conditions that warrant a `buy` or `sell` signal are met. This
+        method will take last row for each symbol in the StockFrame and
+        compare the indicator column values with the conditions specified
+        by the user.
+        If the conditions are met, a dictionary containing necessary information for buy & sell will be returned.
+
+        Args:
+            ticker_indicators (Dict): A dictionary containing all the ticker indicators, ie. Indicator.__ticker_indicator_signals
+            ticker_indicators_key (List[tuple]): A list containing tuple(ticker,indicator), ie. Indicator._ticker_indicators_key
+
+        Returns:
+            Dict: If conditions have been met, dict will contain 2 additional dict called 'buys' & 'sells'. If not, dict will contain nothing
+        """
         
         #Define a dictionary of conditions 
         conditions = {}

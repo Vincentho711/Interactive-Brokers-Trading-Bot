@@ -73,9 +73,31 @@ class Indicators():
         self._indicator_signals[indicator]['sell_operator_max'] = condition_sell_max
 
     # An improved version of set_indicator_signal() as this allows indicator or strategy to be ticker-specific
-    def set_ticker_indicator_signal(self, ticker:str, indicator:str, buy_cash_quantity:float, close_position_when_sell:bool=True, buy:float, \
-        sell:float, condition_buy: Any, condition_sell: Any, buy_max: float = None, sell_max: float = None, \
+    def set_ticker_indicator_signal(self, ticker:str, indicator:str, buy_cash_quantity:float, close_position_when_sell:bool=True, buy:float \
+        , sell:float, condition_buy: Any, condition_sell: Any, buy_max: float = None, sell_max: float = None, \
         condition_buy_max: Any = None, condition_sell_max: Any = None):
+        """Used to set an indicator for a ticker where one indicator crosses above or below a certain numerical threshold.
+
+        Args:
+            ticker (str): The ticker which you wish to set an indicator on
+            indicator (str): The indicator key, e.g. 'ema','sma'
+            buy_cash_quantity (float): The total amount of cash which you wish to allocate on this strategy
+            buy (float): The buy signal threshold for the indicator
+            sell (float): The sell signal threshold for the indicator
+            condition_buy (Any): The operator which is used to evaluate the `buy` condition. For example, `">"` would
+                represent greater than or from the `operator` module it would represent `operator.gt`
+            condition_sell (Any): The operator which is used to evaluate the `sell` condition. For example, `">"` would
+                represent greater than or from the `operator` module it would represent `operator.gt`
+            close_position_when_sell (bool, optional): Sell all the positions held for that ticker when selling. Defaults to True.
+            buy_max (float, optional): If the buy threshold has a maximum value that needs to be set, then set the `buy_max` threshold.
+                This means if the signal exceeds this amount it WILL NOT PURCHASE THE INSTRUMENT. Defaults to None.
+            sell_max (float, optional): If the sell threshold has a maximum value that needs to be set, then set the `buy_max` threshold.
+                This means if the signal exceeds this amount it WILL NOT SELL THE INSTRUMENT. Defaults to None.
+            condition_buy_max (Any, optional): The operator which is used to evaluate the `buy_max` condition. For example, `">"` would
+                represent greater than or from the `operator` module it would represent `operator.gt`
+            condition_sell_max (Any, optional): The operator which is used to evaluate the `sell_max` condition. For example, `">"` would
+                represent greater than or from the `operator` module it would represent `operator.gt`. Defaults to None.
+        """
 
         # Check if ticker exists in the self._ticker_indicator_signals
         if ticker not in self._ticker_indicator_signals:
@@ -388,6 +410,20 @@ class Indicators():
             indicators_key=self._indicators_key
         )
         return signals_df
+
+    # Check whether signals have been flagged for the ticker indicators, if there is buy/sell signal generated, a dict containing buy or sell instruction will be returned. If not, retrun None.
+    def check_ticker_signals(self) -> Dict:
+        """Called by the indicator object which will invoke stock_frame object's function _check_ticker_signals()\
+            It checks whether any buy/sell signal have been generated.
+
+        Returns:
+            Dict: Containing 'buys' or 'sells' if signals have been met. Otherwise, return empty dict
+        """
+        signals_dict = self._stock_frame._check_ticker_signals(
+            ticker_indicators=self._ticker_indicator_signals,
+            ticker_indicators_key=self._ticker_indicators_key
+        )
+        return signals_dict
 
     
             
