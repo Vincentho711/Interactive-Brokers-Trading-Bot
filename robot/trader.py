@@ -725,10 +725,11 @@ class Trader():
                 # Check if position already exists in Portfolio object, only proceed buy signal if it is not in portfolio
                 if self.portfolio.in_portfolio(ticker) is False:
                     
+                    quantity = 0.0
                     quantity = self.calculate_buy_quantity(ticker=ticker,conid=conid,buy_cash_quantity=buy_cash_quantity)
                     
                     # Check if a quantity has been calculated
-                    if quantity not None:
+                    if quantity != 0.0:
                         # Create a Trade object for symbol that doesn't exist in Portfolio.positions
                         # Purchase with the quantity calculated
                         trade_obj: Trade = self.create_trade(

@@ -73,9 +73,8 @@ class Indicators():
         self._indicator_signals[indicator]['sell_operator_max'] = condition_sell_max
 
     # An improved version of set_indicator_signal() as this allows indicator or strategy to be ticker-specific
-    def set_ticker_indicator_signal(self, ticker:str, indicator:str, buy_cash_quantity:float, close_position_when_sell:bool=True, buy:float \
-        , sell:float, condition_buy: Any, condition_sell: Any, buy_max: float = None, sell_max: float = None, \
-        condition_buy_max: Any = None, condition_sell_max: Any = None):
+    def set_ticker_indicator_signal(self, ticker:str, indicator:str, buy_cash_quantity:float, buy:float, sell:float, condition_buy: Any, condition_sell: Any, \
+        close_position_when_sell:bool=True,  buy_max: float = None, sell_max: float = None, condition_buy_max: Any = None, condition_sell_max: Any = None):
         """Used to set an indicator for a ticker where one indicator crosses above or below a certain numerical threshold.
 
         Args:
@@ -102,6 +101,7 @@ class Indicators():
         # Check if ticker exists in the self._ticker_indicator_signals
         if ticker not in self._ticker_indicator_signals:
             self._ticker_indicator_signals[ticker] = {}
+            self._ticker_indicator_signals[ticker][indicator] = {}
 
             # Check if indicator already exists in the dictionary
             if indicator not in self._ticker_indicator_signals[ticker]:
@@ -117,10 +117,10 @@ class Indicators():
         self._ticker_indicator_signals[ticker][indicator]['sell_operator'] = condition_sell
 
         # Add the max signals
-        self._indicator_signals[indicator]['buy_max'] = buy_max  
-        self._indicator_signals[indicator]['sell_max'] = sell_max
-        self._indicator_signals[indicator]['buy_operator_max'] = condition_buy_max
-        self._indicator_signals[indicator]['sell_operator_max'] = condition_sell_max
+        self._ticker_indicator_signals[ticker][indicator]['buy_max'] = buy_max  
+        self._ticker_indicator_signals[ticker][indicator]['sell_max'] = sell_max
+        self._ticker_indicator_signals[ticker][indicator]['buy_operator_max'] = condition_buy_max
+        self._ticker_indicator_signals[ticker][indicator]['sell_operator_max'] = condition_sell_max
 
 
     #Another method for creating a signal would be when one indicator crosses above or below another indicator, so we need to compare the 2 here
