@@ -78,6 +78,17 @@ indicator_client.set_ticker_indicator_signal(
     condition_sell=operator.le,
 )
 
+# Add a MACD indicator
+indicator_client.macd(fast_period=12,slow_period=26)
+
+# Associate macd indicator to the ticker 'AAPL'
+indicator_client.set_ticker_indicator_signal(
+    ticker='AAPL',
+    indicator='macd',
+    buy_cash_quantity=100.0,
+    close_position_when_sell=True,
+    
+) 
 # Check indicators 
 pprint("Ticker indicators key: ")
 pprint("-"*80)
@@ -89,7 +100,7 @@ for ticker in indicator_client._ticker_indicator_signals:
     pprint(f"Indicators for {ticker}:")
     pprint("-"*80)
     for count, indicator in enumerate(indicator_client._ticker_indicator_signals[ticker],start=1):
-        pprint(f"{count}: ")
+        pprint(f"{count}: {str(indicator)}")
         pprint(indicator_client._ticker_indicator_signals[ticker][indicator])
         pprint("="*80)
         pprint("")

@@ -26,7 +26,7 @@ class Indicators():
 
         # For ticker_indicators
         self._ticker_indicator_signals = {}
-
+        self._ticker_indicators_comp_key = []
         self._ticker_indicators_key = []
 
     def set_indicator_signal(self, indicator:str, buy: float, sell: float, condition_buy: Any, condition_sell: Any, buy_max: float = None, sell_max: float = None
@@ -101,7 +101,6 @@ class Indicators():
         # Check if ticker exists in the self._ticker_indicator_signals
         if ticker not in self._ticker_indicator_signals:
             self._ticker_indicator_signals[ticker] = {}
-            self._ticker_indicator_signals[ticker][indicator] = {}
 
             # Check if indicator already exists in the dictionary
             if indicator not in self._ticker_indicator_signals[ticker]:
@@ -164,6 +163,54 @@ class Indicators():
         indicator_dict['indicator_2'] = indicator_2
         indicator_dict['buy_operator'] = condition_buy
         indicator_dict['sell_operator'] = condition_sell
+
+    # An improved version of set_indicator_signal_compare() as this allows indicator to be ticker-specific
+    def set_ticker_indicator_signal_compare(self,ticker:str,buy_cash_quantity:float,indicator_1:str, indicator_2:str, condition_buy: Any, condition_sell: Any, \
+        close_position_when_sell:bool=True) -> None:
+        """Used to set an indicator where one indicator is compared to another indicator.
+            Overview:
+            ----
+            Some trading strategies depend on comparing one indicator to another indicator.
+            For example, the Simple Moving Average crossing above or below the Exponential
+            Moving Average. This will be used to help build those strategies that depend
+            on this type of structure.
+            Arguments:
+            ----
+            ticker {str} -- Ticker
+            buy_cash_quantity (float): The total amount of cash which you wish to allocate on this strategy
+            indicator_1 {str} -- The first indicator key, for example `ema` or `sma`.
+            indicator_2 {str} -- The second indicator key, this is the indicator we will compare to. For example,
+                is the `sma` greater than the `ema`.
+            condition_buy {str} -- The operator which is used to evaluate the `buy` condition. For example, `">"` would
+                represent greater than or from the `operator` module it would represent `operator.gt`.
+            condition_sell {str} -- The operator which is used to evaluate the `sell` condition. For example, `">"` would
+                represent greater than or from the `operator` module it would represent `operator.gt`.
+            close_position_when_sell {bool, optional} -- Sell all the positions held for that ticker when selling. Defaults to True.
+        """
+        # Check if ticker exists in the self._ticker_indicator_signals
+        if ticker not in self._ticker_indicator_signals:
+            self._ticker_indicator_signals[ticker] = {}
+
+            # Create a key 
+            key = tuple(ticker,f"{indicator_1}_comp_{indicator_2}")
+
+            # Check if the key already exists in the dictionary
+            if key not in self._ticker_indicator_signals[ticker]:
+                self._ticker_indicator_signals[ticker][key] = {}
+                self._ticker_indicators_comp_key.append(key)
+
+        # Grab the key dictionary
+        indicator_dict = self._ticker_indicator_signals[ticker][key]
+
+        #Add the signals
+        indicator_dict['type'] = 'comparison'
+        indicator_dict['indicator_1'] = indicator_1
+        indicator_dict['indicator_2'] = indicator_2
+        indicator_dict['buy_operator'] = condition_buy
+        indicator_dict['sell_operator'] = condition_sell
+        indicator_dict['buy_cash_quantity'] = buy_cash_quantity
+        indicator_dict['close_position_when_sell'] = close_position_when_sell
+
 
     def get_indicator_signal(self,indicator:str = None) -> Dict:
         """Return the raw Pandas Dataframe Object.

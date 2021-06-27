@@ -257,7 +257,7 @@ class StockFrame():
 
     # Check whether the conditions for the indicators associated with ticker has been met. If it's met, it will \
     # return the last row for each symbol in the StockFrame and compare the indicator column values with the conditions specidied. 
-    def _check_ticker_signals(self, ticker_indicators:Dict, ticker_indicators_key:List[tuple]) -> Dict:
+    def _check_ticker_signals(self, ticker_indicators:Dict, ticker_indicators_comp_key:List[tuple], ticker_indicators_key:List[tuple]) -> Dict:
         """Returns a dict containing buy & sell information if conditions are met by the ticker indicators.
         Overview:
         ----
@@ -270,6 +270,7 @@ class StockFrame():
 
         Args:
             ticker_indicators (Dict): A dictionary containing all the ticker indicators, ie. Indicator.__ticker_indicator_signals
+            ticker_indicators_comp_key (List[tuple]): A list containing tuple(ticker,comp_indicator), i.e. ('APPL',"macd_comp_macd_signal")
             ticker_indicators_key (List[tuple]): A list containing tuple(ticker,indicator), ie. Indicator._ticker_indicators_key
 
         Returns:
@@ -312,9 +313,44 @@ class StockFrame():
                     # The key would be the ticker and the value would be close_position_when_sold:bool, this will be passed onto process_signal()
                     conditions['sells'].update({ticker:ticker_indicators[ticker][indicator]['close_position_when_sell']})
         
+        # Check comparison indicators
+        # Store the comparison indicators in a list
+        check_indicators = []
+
+        for ticker,comp_key in ticker_indicators_comp_key:
+            #Split the indicators into 2 parts by '_comp_' so we can check if both exist
+            parts = comp_key.split('_comp_')
+            check_indicators+= parts
+
+        # Check to see if all the indicator columns exist
+        if self.do_indicator_exist(column_names=check_indicators):
+            #Loop through every tuple in ticker_indicators_key which is a list
+            for ticker_comp_indicator in ticker_indicators_comp_key:
+                # Check whether it is a normal indicator or comparison indicator by checking whether _comp_ exists in 2nd element of ticker_in
+                # The first element of tuple is the ticker and the second element of tuple contains the name of indicator 
+                ticker = ticker_comp_indicator[0]
+                comp_indicator = ticker_comp_indicator[1]
+
+                # Split the indicators.
+                parts = indicator.split('_comp_')
+
+                #Grab the last row of thr indicators that need to be compared
+                last_row = self._symbol_groups.get_group(ticker).tail(1)
+
+                # Select the indicator cell for indicator 1 as target for comparison later
+                target_cell_1 = last_row[parts[0]]
+
+                # Select the indicator cell for indicator 2 as target for comparison later
+                target_cell_2 = last_row[parts[1]]
+
+                if buy_condition_operator(target_cell_1, target_cell_2):
+                    # If the buy condition has been met, append key-value pair to conditions['buys']
+                    # The key would be the ticker and the value would be the buy_cash_quantity which can be used to calculate quantity in process_signal()
+                    conditions['buys'].update({ticker:ticker_indicators[ticker][ticker_comp_indicator]['buy_cash_quantity']})
+
+                if sell_condition_operator(target_cell_1, target_cell_2):
+                    # If the sell condition has been met, append key-value pair to conditions['sells']
+                    # The key would be the ticker and the value would be close_position_when_sold:bool, this will be passed onto process_signal()
+                    conditions['sells'].update({ticker:ticker_indicators[ticker][ticker_comp_indicator]['close_position_when_sell']})
+
         return conditions
-
-
-
-
-
