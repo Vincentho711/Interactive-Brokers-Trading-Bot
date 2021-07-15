@@ -2,8 +2,8 @@ from distutils.core import setup
 from setuptools import setup, find_packages
 
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+# with open("README.md", "r") as fh:
+#    long_description = fh.read()
 
 setup(
 
@@ -21,7 +21,7 @@ setup(
     description='A python client library for the Interactive Broker Web API.',
 
     # I have a long description but that will just be my README file.
-    long_description=long_description,
+    long_description="A Python library written to handle IB's Client Portal API, manage portfolio and execute trades.",
 
     # want to make sure that I specify the long description as MARKDOWN.
     long_description_content_type="text/markdown",

@@ -114,21 +114,31 @@ Before using this library, ensure you have Java installed and have an account wi
    ```sh
    git clone https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot.git
    ```
-2. Navigate to the working directory and run setup.py
+2. Navigate to the working directory
 
-3. Enter your IB credentials in write_config.py and run the script
+3. In the terminal, run 
+    ```
+   python setup.py build
+    ``` 
+    and then
+    ```
+   python setup.py install
+    ``` 
 
-4. Open run_client.py and run the script. It will download the clientportal.gw to the working directory.
 
-5. In file explorer, navigate to the    clientportal.gw foler and run
+4. Enter your IB credentials in write_config.py and run the script
+
+5. Open run_client.py and run the script. It will download the clientportal.gw to the working directory.
+
+6. Using Git Bash, navigate to the    clientportal.gw folder and run
     ```
    "bin/run.bat" "root/conf.yaml"
     ```
-    using Git Bash.
 
-6. Run run_client.py in tests and the bot should be up and running.
 
-7. Follow the instructions on run_client.py to configure your trading bot.
+7. Run run_client.py in tests and the bot should be up and running.
+
+8. Follow the instructions on run_client.py to configure your trading bot.
 
 
 
@@ -151,7 +161,7 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 
 | Status | Milestone | Goals | ETA |
 | :---: | :--- | :---: | :---: |
-| 🚀 | **[Implement the ability to associate tickers with different indicators and trigger levels](#implement-ticker-indicators-association)** | 0 / 1 | 15 April 2021 |
+| 🚀 | **[Implement the ability to associate tickers with different indicators and trigger levels](#implement-ticker-indicators-association)** | 1 / 1 | 15 April 2021 |
 
 ### Implement ticker indicators association
 
