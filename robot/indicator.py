@@ -9,12 +9,12 @@ from typing import Union
 from typing import Optional
 from typing import Tuple
 
-from robot.stock_frame import StockFrame
+import robot.stock_frame as stock_frame
 
 class Indicators():
-    def __init__(self, price_df: StockFrame) -> None:
-
-        self._stock_frame: StockFrame = price_df
+    def __init__(self, price_df: stock_frame.StockFrame) -> None:
+        
+        self._stock_frame: stock_frame.StockFrame = price_df
         self._price_groups = self._stock_frame.symbol_groups
         self._current_indicators = {}        #Instead of asking the user to call all the functions again when a new data row comes in, a wrapper is used to update each column
                                              #Indicators that user has assigned to the stock frame

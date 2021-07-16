@@ -4,6 +4,11 @@ import json
 import pathlib
 import operator
 import time as time_true
+import robot.indicator as indicator
+import robot.trader as trader
+import robot.stock_frame as stock_frame
+import robot.portfolio as portfolio
+import robot.trades as trades
 
 from pprint import pprint
 from datetime import time
@@ -12,11 +17,6 @@ from datetime import timezone
 from configparser import ConfigParser
 
 from ibw.client import IBClient
-from robot.trader import Trader
-from robot.stock_frame import StockFrame
-from robot.indicator import Indicators
-from robot.portfolio import Portfolio
-from robot.trades import Trade
 
 # First, the script setup.py has to be run once to configure the libraries when you use this library \
 # for the first time.
@@ -46,7 +46,7 @@ regular_account = config.get('main','REGULAR_ACCOUNT')
 regular_username = config.get('main','REGULAR_USERNAME')
 
 # Create a new trader object
-trader = Trader(
+trader = trader.Trader(
     username=paper_username,
     account=paper_account
 )
@@ -137,7 +137,7 @@ conids_list = ['265598','272093']
 exchange_list = ['NYSE','NASDAQ']
 
 # 2. Create  a trader object
-trader = Trader(
+trader = trader.Trader(
     username=paper_username,
     account=paper_account
 )
@@ -153,7 +153,7 @@ historical_prices_list = trader.get_historical_prices(
 stock_frame_client = trader.create_stock_frame(trader.historical_prices['aggregated'])
 
 # 5. Create a indicator object and populate it historical prices
-indicator_client = Indicators(
+indicator_client = indicator.Indicators(
     price_df= stock_frame_client
 )
 

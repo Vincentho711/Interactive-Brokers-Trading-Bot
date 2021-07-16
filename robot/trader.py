@@ -3,6 +3,9 @@ import time as time_true
 import pprint
 import pathlib
 import pandas as pd
+import robot.stock_frame as stock_frame
+import robot.trades as trades
+import robot.portfolio as portfolio
 
 from datetime import time
 from datetime import datetime
@@ -15,11 +18,6 @@ from typing import Union
 from typing import Optional
 from ibw.client import IBClient
 from configparser import ConfigParser
-
-from robot.stock_frame import StockFrame
-from robot.trades import Trade
-from robot.portfolio import Portfolio
-
 
 #gateway_path = pathlib.Path('clientportal.gw').resolve() #Added this line to redirect clientportal.gw away from resoruces/clientportal.beta.gw
 
@@ -57,8 +55,8 @@ class Trader():
         self.session: IBClient = self._create_session()         ### self.seesion = ib_client ### 
         self._account_data:pd.DataFrame = self._get_account_data()      #Get account data
         self.historical_prices = {}                             #A historical prices dictionary for all interested stocks
-        self.stock_frame:StockFrame = None
-        self.portfolio:Portfolio = None
+        self.stock_frame:stock_frame.StockFrame = None
+        self.portfolio:portfolio.Portfolio = None
         self.trades = {}                                        # A dictionary of all the trades that belongs to the trader
     
     @property
@@ -374,7 +372,7 @@ class Trader():
         time_true.sleep(time_to_wait_now)
         
     #Create a stock frame for trader class
-    def create_stock_frame(self,data: List[Dict]) -> StockFrame:
+    def create_stock_frame(self,data: List[Dict]) -> stock_frame.StockFrame:
         """Generates a new stock frame object
         Arguments:
         ----
@@ -386,7 +384,7 @@ class Trader():
         """
 
         #Create the frame
-        self.stock_frame = StockFrame(data=data)
+        self.stock_frame = stock_frame.StockFrame(data=data)
         return self.stock_frame
 
     #Obtain account positions data which will then be passed to the portfolio object to generate a portfolio dataframe
@@ -436,7 +434,7 @@ class Trader():
 
         return account_positions
 
-    def create_portfolio(self) -> Portfolio:
+    def create_portfolio(self) -> portfolio.Portfolio:
         """Creates a new portfoliio
 
         Creates a Portfolio Object to help store and organise positions as they are added or removed.
@@ -451,7 +449,7 @@ class Trader():
         
         trader_portfolio = trader.create_portfolio()
         """
-        self.portfolio = Portfolio(account_id=self.account)
+        self.portfolio = portfolio.Portfolio(account_id=self.account)
         
         #Assign the client
         self.portfolio._ib_client = self.session
@@ -460,7 +458,7 @@ class Trader():
 
 
     def create_trade(self,account_id:Optional[str], local_trade_id:str, conid:str, ticker:str, security_type:str, order_type: str, side:str, duration:str , 
-    price:float = 0.0, quantity:float = 0.0,outsideRTH:bool=False) -> Trade:
+    price:float = 0.0, quantity:float = 0.0,outsideRTH:bool=False) -> trades.Trade:
         """Initalizes a new instance of a Trade Object.
         This helps simplify the process of building an order by using pre-built templates that can be
         easily modified to incorporate more complex strategies.
@@ -520,7 +518,7 @@ class Trader():
         """
 
         #Initialise a Trade object
-        trade = Trade()
+        trade = trades.Trade()
 
         #Create a new order
         trade.create_order(
@@ -587,7 +585,7 @@ class Trader():
                 # Check if position already exists in Portfolio object, only proceed buy signal if it is not in portfolio
                 if self.portfolio.in_portfolio(symbol) is False:
                     #Create a Trade object for symbol that doesn't exist in Portfolio.positions
-                    trade_obj: Trade = self.create_trade(
+                    trade_obj: trades.Trade = self.create_trade(
                         account_id=self.account,
                         local_trade_id=None,
                         conid=conid,
@@ -666,7 +664,7 @@ class Trader():
                         self.portfolio.set_ownership_status(symbol=symbol,ownership=False)
 
                         # Create a trade_obj to sell it
-                        trade_obj: Trade = self.create_trade(
+                        trade_obj: trades.Trade = self.create_trade(
                             account_id=self.account,
                             local_trade_id=None,
                             conid=conid,
@@ -732,7 +730,7 @@ class Trader():
                     if quantity != 0.0:
                         # Create a Trade object for symbol that doesn't exist in Portfolio.positions
                         # Purchase with the quantity calculated
-                        trade_obj: Trade = self.create_trade(
+                        trade_obj: trades.Trade = self.create_trade(
                             account_id=self.account,
                             local_trade_id=None,
                             conid=conid,
@@ -753,7 +751,7 @@ class Trader():
 
                         # Save the exexcute_order_response into a dictionary
                         order_response = {
-                            'symbol': symbol,
+                            'symbol': ticker,
                             'local_trade_id':execute_order_response[0]['local_order_id'],
                             'trade_id':execute_order_response[0]['order_id'],
                             'message':execute_order_response[0]['text'],
@@ -818,7 +816,7 @@ class Trader():
                             quantity = self.portfolio.positions[ticker]['quantity']
                         
                         # Create a trade_obj to sell it
-                        trade_obj: Trade = self.create_trade(
+                        trade_obj: trades.Trade = self.create_trade(
                             account_id=self.account,
                             local_trade_id=None,
                             conid=conid,
@@ -850,8 +848,8 @@ class Trader():
                         time_true.sleep(0.1)
 
                         # Set positions[symbol]['quantity] to 0 and update order_status
-                        self.portfolio.positions[symbol]['quantity'] = 0
-                        self.portfolio.positions[symbol]['order_status'] = execute_order_response[0]['order_status']
+                        self.portfolio.positions[ticker]['quantity'] = 0
+                        self.portfolio.positions[ticker]['order_status'] = execute_order_response[0]['order_status']
 
                         order_responses.append(order_response)
 

@@ -5,7 +5,8 @@ from typing import Optional
 from typing import Tuple
 
 from ibw.client import IBClient
-from robot.stock_frame import StockFrame
+
+import robot.stock_frame as stock_frame
 import pandas as pd
 import numpy as np
 
@@ -23,7 +24,7 @@ class Portfolio():
         self.positions_count = 0
         
         self._ib_client: IBClient = None
-        self._stock_frame : StockFrame = None
+        self._stock_frame : stock_frame.StockFrame = None
 
         
     #Create an add_position function to add positions to portfolio
