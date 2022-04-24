@@ -148,9 +148,6 @@ Before using this library, ensure you have Java installed and have an account wi
 
 To use it, study the revelant libraries, namely the python objects in robot/ folder. There are also some simple instructions in the run_client.py to get you up and running quick.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
 
 <!-- ROADMAP -->
 ## 🚩 Roadmap
@@ -193,7 +190,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## 😃 Contact
 
-Vincent Ho - [LinkedIn](https://www.linkedin.com/in/vincent-ho-b0932b138/)
+Vincent Ho - [LinkedIn](https://www.linkedin.com/in/vincentho711/)
 
 Project Link: [https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot](https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot)
 
@@ -221,5 +218,5 @@ Project Link: [https://github.com/Vincentho711/Interactive-Brokers-Trading-Bot](
 [license-shield]: https://img.shields.io/github/license/Vincentho711/Interactive-Brokers-Trading-Bot?style=for-the-badge
 [license-url]: https://github.com/github_username/repo/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/vincent-ho-b0932b138/
+[linkedin-url]: https://www.linkedin.com/in/vincentho711/
 [forthebadge made-with-python]: http://ForTheBadge.com/images/badges/made-with-python.svg
