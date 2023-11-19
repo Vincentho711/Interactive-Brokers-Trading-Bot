@@ -119,9 +119,10 @@ class Trader():
 
             #New row
             new_row = pd.Series(data=row_values,index=account_df.columns,name=row_id)
-
+            new_df  = new_row.to_frame().T
+            
             #Add row
-            account_df = account_df.append(new_row)
+            account_df = pd.concat([account_df,new_df])
         
         #return dataframe
         return account_df
@@ -149,14 +150,16 @@ class Trader():
                     item['description'],        #Exchange
                     normalized_sectype_list     #List containing all securities type
                 ]
-                
+
                 #Define our index
                 row_id = (item['symbol'],item['description'])      #Tuple with 2 elements, symbol and exchange which is fixed
 
                 #New row
-                new_row = pd.Series(data=row_values,index=symbol_to_conid_df.columns,name=row_id)
+                new_row = pd.Series(data=row_values,index=column_names,name=row_id)
+                new_df = new_row.to_frame().T
+                
                 #Add row
-                symbol_to_conid_df = symbol_to_conid_df.append(new_row)
+                symbol_to_conid_df = pd.concat([symbol_to_conid_df,new_df])
                 
         return symbol_to_conid_df
     
