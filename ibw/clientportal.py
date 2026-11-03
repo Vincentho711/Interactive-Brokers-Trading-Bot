@@ -86,7 +86,12 @@ class ClientPortal():
         """
 
         # Extract the Content to the new folder.
-        zip_file.extractall(path="clientportal.gw")
+        target = pathlib.Path("clientportal.gw").resolve()
+        for member in zip_file.namelist():
+            member_path = (target / member).resolve()
+            if target not in member_path.parents and member_path != target:
+                raise ValueError(f"Unsafe path in archive: {member}")
+            zip_file.extract(member, path="clientportal.gw")
 
     def download_and_extract(self) -> None:
         """Downloads and extracts the client portal object."""
